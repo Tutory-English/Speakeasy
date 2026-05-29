@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeakEasy ✨ — Make Speaking English Easy</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --cream:#faf6ee;--rust:#c84b2f;--rust-dark:#a83820;--rust-light:#fdf0eb;
+  --blue:#4a7fc1;--blue-light:#eef4fb;--gold:#d4850a;--gold-light:#fdf6e3;
+  --green:#2e7d32;--green-light:#e8f5e9;
+  --dark:#2d1a0e;--mid:#7a5c45;--border:#e5d9c5;--white:#ffffff;
+  --shadow:0 4px 20px rgba(45,26,14,.08);--r:16px;
+  --font-head:'Playfair Display',Georgia,serif;--font-body:'Poppins',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--font-body);background:var(--cream);color:var(--dark);font-size:15px;line-height:1.6}
+button{cursor:pointer;border:none;font-family:var(--font-body)}
+.screen{display:none;flex-direction:column;min-height:calc(100vh - 64px)}
+.screen.active{display:flex}
+/* NAV */
+.topnav{background:var(--white);border-bottom:2px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:6px;height:64px;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--font-head);font-size:1.45rem;font-weight:800;color:var(--rust);margin-right:auto;font-style:italic;cursor:pointer}
+.logo span{color:var(--gold)}
+.nav-btn{padding:7px 16px;border-radius:30px;font-size:.82rem;font-weight:600;background:transparent;color:var(--mid);transition:all .15s;border:2px solid transparent}
+.nav-btn:hover,.nav-btn.active{background:var(--rust-light);color:var(--rust);border-color:var(--border)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 28px;border-radius:30px;font-size:.9rem;font-weight:700;transition:all .2s;border:none;cursor:pointer;font-family:var(--font-body)}
+.btn-rust{background:var(--rust);color:#fff}.btn-rust:hover{background:var(--rust-dark);transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,75,47,.3)}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:#3a6eb0;transform:translateY(-1px)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#1b5e20;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--rust);border:2px solid var(--rust)}.btn-outline:hover{background:var(--rust-light)}
+.btn-ghost{background:var(--white);color:var(--mid);border:2px solid var(--border)}.btn-ghost:hover{border-color:var(--mid)}
+/* HOME */
+.home-hero{background:var(--rust);color:#fff;padding:56px 28px 48px;text-align:center;position:relative;overflow:hidden}
+.home-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 28px);pointer-events:none}
+.home-hero h1{font-family:var(--font-head);font-size:clamp(2rem,5.5vw,3.4rem);font-weight:800;font-style:italic;line-height:1.1;margin-bottom:10px}
+.home-hero h1 span{color:var(--gold)}
+.home-hero p{font-size:1rem;opacity:.9;max-width:460px;margin:0 auto 26px}.home-hero>*{position:relative;z-index:1}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:4px 14px;font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px}
+.home-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;padding:36px 22px;max-width:920px;margin:0 auto;width:100%}
+.feat-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:24px 20px;transition:all .2s}
+.feat-card:hover{border-color:var(--rust);transform:translateY(-2px);box-shadow:var(--shadow)}
+.feat-icon{font-size:2rem;margin-bottom:10px;display:block}
+.feat-card h3{font-family:var(--font-head);font-size:1.05rem;font-weight:700;margin-bottom:5px}
+.feat-card p{font-size:.82rem;color:var(--mid);line-height:1.5}
+.home-cta{text-align:center;padding:0 22px 44px}
+.home-cta h2{font-family:var(--font-head);font-size:1.7rem;font-weight:700;font-style:italic;margin-bottom:8px}
+.home-cta p{color:var(--mid);margin-bottom:22px;font-size:.9rem}
+/* SETUP */
+.setup-wrap{max-width:660px;margin:0 auto;padding:36px 22px;width:100%}
+.setup-title{font-family:var(--font-head);font-size:1.9rem;font-weight:800;font-style:italic;margin-bottom:5px}
+.setup-sub{color:var(--mid);margin-bottom:28px;font-size:.9rem}
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--rust);margin-bottom:10px}
+.chip-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px}
+.chip{padding:9px 18px;border-radius:30px;border:2px solid var(--border);font-size:.85rem;font-weight:600;cursor:pointer;background:var(--white);color:var(--mid);transition:all .15s}
+.chip:hover{border-color:var(--rust);color:var(--rust)}
+.chip.active{background:var(--rust);color:#fff;border-color:var(--rust)}
+.chip.blue.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.sub-panel{background:var(--blue-light);border:2px solid #c0d8f0;border-radius:var(--r);padding:18px;margin-bottom:22px;animation:fadeUp .2s ease}
+.chip-sm{padding:6px 13px;border-radius:30px;border:2px solid var(--border);font-size:.78rem;font-weight:600;cursor:pointer;background:var(--white);color:var(--mid);transition:all .15s}
+.chip-sm.blue.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.desc-box{margin-top:10px;font-size:.8rem;color:var(--mid);background:rgba(255,255,255,.7);border-radius:8px;padding:9px 13px;border-left:3px solid var(--blue)}
+.setup-footer{display:flex;gap:10px;align-items:center;margin-top:6px}
+/* PRACTICE */
+.prac-wrap{max-width:680px;margin:0 auto;padding:28px 22px 44px;width:100%;display:flex;flex-direction:column;align-items:center}
+.prac-header{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.cat-badge{padding:4px 13px;border-radius:30px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.cat-badge.rust{background:var(--rust-light);color:var(--rust)}
+.cat-badge.blue{background:var(--blue-light);color:var(--blue)}
+.cat-badge.green{background:var(--green-light);color:var(--green)}
+.phase-lbl{font-size:.8rem;font-weight:600;color:var(--mid);margin-left:auto}
+/* Phase stepper (All Parts) */
+.stepper{width:100%;display:flex;align-items:center;gap:0;margin-bottom:22px;background:var(--white);border:2px solid var(--border);border-radius:12px;padding:12px 16px}
+.step{flex:1;text-align:center;font-size:.78rem;font-weight:600;color:var(--mid);padding:4px 0;border-radius:8px;transition:all .2s}
+.step.active{background:var(--blue-light);color:var(--blue)}
+.step.done{color:var(--green)}
+.step-arrow{color:var(--border);font-size:.9rem;flex-shrink:0}
+/* Topic header */
+.topic-hdr{width:100%;background:var(--white);border:2px solid var(--border);border-radius:12px;padding:13px 17px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.topic-hdr .tlbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid)}
+.topic-hdr .tname{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--dark)}
+.topic-hdr .tprog{margin-left:auto;font-size:.76rem;color:var(--mid);font-weight:600;white-space:nowrap}
+/* Transition card */
+.trans-card{width:100%;background:var(--green-light);border:2px solid #a5d6a7;border-radius:var(--r);padding:28px 24px;text-align:center;margin-bottom:20px;animation:fadeUp .3s ease}
+.trans-card h3{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--green);margin-bottom:6px}
+.trans-card p{font-size:.88rem;color:var(--mid);margin-bottom:18px}
+/* Timer ring */
+.timer-wrap{position:relative;width:156px;height:156px;margin:0 auto 22px}
+.timer-wrap svg{transform:rotate(-90deg)}
+.t-bg{fill:none;stroke:var(--border);stroke-width:8}
+.t-bar{fill:none;stroke:var(--rust);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .3s}
+.t-bar.prep{stroke:var(--blue)}.t-bar.done{stroke:var(--green)}
+.t-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t-num{font-size:2.3rem;font-weight:700;color:var(--dark);font-family:var(--font-head)}
+.t-phase{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mid)}
+/* Elapsed */
+.elapsed-wrap{text-align:center;margin-bottom:20px}
+.elapsed-num{font-size:2.5rem;font-weight:700;font-family:var(--font-head);color:var(--dark)}
+.elapsed-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--mid)}
+/* Q card */
+.q-card{background:linear-gradient(135deg,var(--rust),#e06035);border-radius:18px;padding:28px 26px;width:100%;margin-bottom:20px;box-shadow:0 8px 28px rgba(200,75,47,.2)}
+.q-card.blue{background:linear-gradient(135deg,var(--blue),#6294cc);box-shadow:0 8px 28px rgba(74,127,193,.2)}
+.q-card.green{background:linear-gradient(135deg,var(--green),#4caf50);box-shadow:0 8px 28px rgba(46,125,50,.2)}
+.q-tag{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-bottom:9px}
+.q-text{font-size:1.08rem;font-weight:600;color:#fff;line-height:1.65;white-space:pre-line}
+/* Controls */
+.ctrl-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;width:100%;margin-top:2px}
+/* Peer */
+/* RESULT */
+.result-wrap{max-width:560px;margin:0 auto;padding:36px 22px;width:100%}
+.result-hero{text-align:center;margin-bottom:28px}
+.result-hero h2{font-family:var(--font-head);font-size:1.9rem;font-weight:800;font-style:italic;margin-bottom:5px}
+.result-hero .sub{color:var(--mid);font-size:.9rem}
+.time-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:26px;text-align:center;margin-bottom:22px}
+.big-time{font-family:var(--font-head);font-size:3.4rem;font-weight:800;color:var(--rust);line-height:1}
+.time-lbl{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-top:5px}
+.q-recap{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:22px}
+.q-recap h4{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--rust);margin-bottom:7px}
+.q-recap p{font-size:.88rem;color:var(--dark);line-height:1.6;white-space:pre-line}
+.result-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+/* LESSONS */
+.lessons-wrap{max-width:780px;margin:0 auto;padding:36px 22px;width:100%}
+.lesson-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.lesson-tab{padding:8px 18px;border-radius:30px;border:2px solid var(--border);font-size:.82rem;font-weight:600;cursor:pointer;background:var(--white);color:var(--mid);transition:all .15s}
+.lesson-tab:hover{border-color:var(--rust);color:var(--rust)}
+.lesson-tab.active{background:var(--rust);color:#fff;border-color:var(--rust)}
+.phrase-section{margin-bottom:28px}
+.phrase-section h3{font-family:var(--font-head);font-size:1.05rem;font-weight:700;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+.phrase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:9px}
+.phrase-card{background:var(--white);border:2px solid var(--border);border-radius:11px;padding:13px 15px;transition:all .15s}
+.phrase-card:hover{border-color:var(--rust);transform:translateY(-1px)}
+.phrase{font-weight:600;color:var(--dark);font-size:.85rem;margin-bottom:3px}
+.usage{font-size:.76rem;color:var(--mid);font-style:italic}
+/* Footer */
+footer{text-align:center;padding:22px 16px 16px;font-size:.76rem;color:var(--mid);border-top:2px solid var(--border);background:var(--white);margin-top:auto}
+footer strong{color:var(--dark)}
+footer a{color:var(--rust);text-decoration:none;font-weight:600}
+footer a:hover{text-decoration:underline}
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .3s ease}
+
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <span class="logo" onclick="goHome()">Speak<span>Easy</span></span>
+  <button class="nav-btn active" id="nav-home" onclick="goHome()">🏠 Home</button>
+  <button class="nav-btn" id="nav-practice" onclick="goSetup()">🎯 Practice</button>
+  <button class="nav-btn" id="nav-lessons" onclick="goLessons()">📚 Lessons</button>
+</nav>
+
+<!-- ── HOME ── -->
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <div class="hero-badge">✨ Speaking Practice Made Easy</div>
+    <h1>Speak<span>Easy</span> —<br>Make English Speaking<br>Feel Natural</h1>
+    <p>Practice IELTS speaking, general conversation, and presentations with real question sets.</p>
+    <button class="btn btn-rust" style="background:#fff;color:var(--rust)" onclick="goSetup()">🎯 Start Practising</button>
+  </div>
+  <div class="home-features">
+    <div class="feat-card"><span class="feat-icon">📝</span><h3>Complete IELTS Sets</h3><p>All Parts mode runs you through a real mock test — Part 1 → Part 2 → Part 3 in sequence.</p></div>
+    <div class="feat-card"><span class="feat-icon">⏱️</span><h3>Timed Part 2</h3><p>1 min prep + 2 min speaking for cue cards, just like the real exam. Skip prep when ready.</p></div>
+    <div class="feat-card"><span class="feat-icon">📚</span><h3>Phrase Library</h3><p>Useful phrases for IELTS, presentations, and everyday English.</p></div>
+    <div class="feat-card"><span class="feat-icon">🗣️</span><h3>Pronunciation Tips</h3><p>Learn word stress, connected speech, and sounds to improve your spoken English.</p></div>
+  </div>
+  <div class="home-cta">
+    <h2>Ready to speak with confidence?</h2>
+    <p>Pick a category and start — record yourself on your phone while you practise!</p>
+    <button class="btn btn-rust" onclick="goSetup()">🚀 Let's Go</button>
+  </div>
+  <footer>© 2025 <strong>TutoryEnglish</strong> &nbsp;·&nbsp;
+    <a href="https://instagram.com/shersharesielts" target="_blank">@shersharesielts</a> &nbsp;&amp;&nbsp;
+    <a href="https://instagram.com/shersharesenglish" target="_blank">@shersharesenglish</a><br>
+    Made with ❤️ for English learners everywhere
+  </footer>
+</div>
+
+<!-- ── SETUP ── -->
+<div class="screen" id="screen-setup">
+  <div class="setup-wrap fade-up">
+    <div class="setup-title">Choose Your Practice</div>
+    <div class="setup-sub">Pick a category and start speaking!</div>
+    <div class="section-label">Category</div>
+    <div class="chip-row">
+      <button class="chip active" data-cat="general" onclick="selCat(this)">💬 General Speaking</button>
+      <button class="chip" data-cat="ielts" onclick="selCat(this)">📝 IELTS Speaking</button>
+      <button class="chip" data-cat="presentation" onclick="selCat(this)">📊 Presentation</button>
+    </div>
+    <div class="sub-panel" id="ielts-panel" style="display:none">
+      <div class="section-label" style="color:var(--blue)">IELTS Part</div>
+      <div class="chip-row">
+        <button class="chip-sm blue active" data-part="all" onclick="selPart(this)">📝 All Parts</button>
+        <button class="chip-sm blue" data-part="1" onclick="selPart(this)">Part 1 · Intro</button>
+        <button class="chip-sm blue" data-part="2" onclick="selPart(this)">Part 2 · Cue Card</button>
+        <button class="chip-sm blue" data-part="3" onclick="selPart(this)">Part 3 · Discussion</button>
+      </div>
+      <div class="desc-box" id="ielts-desc">All Parts — complete mock test: Part 1 topics → Part 2 cue card (timed) → Part 3 discussion.</div>
+    </div>
+    <div class="setup-footer">
+      <button class="btn btn-rust" onclick="startPractice()">🎯 Start</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRACTICE ── -->
+<div class="screen" id="screen-practice">
+  <div class="prac-wrap">
+    <!-- Header -->
+    <div class="prac-header">
+      <span class="cat-badge rust" id="prac-badge">General</span>
+      <span class="phase-lbl" id="phase-lbl">Get Ready</span>
+      <button class="btn btn-ghost" style="padding:5px 13px;font-size:.76rem" onclick="exitPractice()">✕ Exit</button>
+    </div>
+    <!-- All-Parts stepper -->
+    <div class="stepper" id="stepper" style="display:none">
+      <div class="step" id="step-p1">📋 Part 1</div>
+      <div class="step-arrow">›</div>
+      <div class="step" id="step-p2">🃏 Part 2</div>
+      <div class="step-arrow">›</div>
+      <div class="step" id="step-p3">💬 Part 3</div>
+    </div>
+    <!-- Topic header -->
+    <div class="topic-hdr" id="topic-hdr" style="display:none">
+      <div><div class="tlbl" id="topic-lbl">Topic</div><div class="tname" id="topic-name">—</div></div>
+      <div class="tprog" id="topic-prog">Q 1 / 4</div>
+    </div>
+    <!-- Transition card -->
+    <div class="trans-card" id="trans-card" style="display:none">
+      <h3 id="trans-title">Part 1 Complete ✅</h3>
+      <p id="trans-msg">Moving on to Part 2 — Cue Card</p>
+      <button class="btn btn-green" id="trans-btn" onclick="transNext()">Continue →</button>
+    </div>
+    <!-- Timer ring -->
+    <div class="timer-wrap" id="timer-wrap" style="display:none">
+      <svg width="156" height="156" viewBox="0 0 156 156">
+        <circle class="t-bg" cx="78" cy="78" r="70"/>
+        <circle class="t-bar" id="t-bar" cx="78" cy="78" r="70"
+          stroke-dasharray="439.8" stroke-dashoffset="0"/>
+      </svg>
+      <div class="t-center">
+        <div class="t-num" id="t-num">1:00</div>
+        <div class="t-phase" id="t-phase">PREP</div>
+      </div>
+    </div>
+    <!-- Elapsed -->
+    <div class="elapsed-wrap" id="elapsed-wrap" style="display:none">
+      <div class="elapsed-num" id="elapsed-num">0:00</div>
+      <div class="elapsed-lbl">Time Speaking</div>
+    </div>
+    <!-- Q card -->
+    <div class="q-card" id="q-card" style="display:none">
+      <div class="q-tag" id="q-tag">YOUR QUESTION IS:</div>
+      <div class="q-text" id="q-text">—</div>
+    </div>
+    <!-- Controls -->
+    <div class="ctrl-row" id="ctrl-row">
+      <button class="btn btn-rust" id="btn-start" onclick="onStart()">▶ Start</button>
+      <button class="btn btn-ghost" id="btn-skip-prep" onclick="onSkipPrep()" style="display:none">⏩ Skip Prep</button>
+      <button class="btn btn-ghost" id="btn-stop" onclick="onStop()" style="display:none">⏹ Stop</button>
+      <button class="btn btn-blue" id="btn-next" onclick="onNext()" style="display:none">Next Question →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESULT ── -->
+<div class="screen" id="screen-result">
+  <div class="result-wrap fade-up">
+    <div class="result-hero">
+      <h2 id="result-title">Great work! 🎉</h2>
+      <p class="sub" id="result-sub">Session complete</p>
+    </div>
+    <div class="time-card">
+      <div class="big-time" id="result-time">0:00</div>
+      <div class="time-lbl" id="result-time-lbl">Time Spoken (Part 2)</div>
+    </div>
+    <div class="q-recap">
+      <h4>📋 Your Question</h4>
+      <p id="result-q">—</p>
+    </div>
+    <div id="peer-compare" style="display:none;background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:22px">
+      <h4 style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--rust);margin-bottom:12px">👥 Peer Comparison</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center">
+        <div><div style="font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--rust)" id="peer-t1">—</div><div style="font-size:.72rem;color:var(--mid);font-weight:600;text-transform:uppercase">Partner 1</div></div>
+        <div><div style="font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--blue)" id="peer-t2">—</div><div style="font-size:.72rem;color:var(--mid);font-weight:600;text-transform:uppercase">Partner 2</div></div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-rust" onclick="tryAgain()">🔄 Same Question</button>
+      <button class="btn btn-outline" onclick="startPractice()">🎰 New Question</button>
+      <button class="btn btn-ghost" onclick="goLessons()">📚 Lessons</button>
+    </div>
+  </div>
+  <footer>© 2025 <strong>TutoryEnglish</strong> &nbsp;·&nbsp;
+    <a href="https://instagram.com/shersharesielts" target="_blank">@shersharesielts</a> &nbsp;&amp;&nbsp;
+    <a href="https://instagram.com/shersharesenglish" target="_blank">@shersharesenglish</a>
+  </footer>
+</div>
+
+<!-- ── LESSONS ── -->
+<div class="screen" id="screen-lessons">
+  <div class="lessons-wrap fade-up">
+    <div style="font-family:var(--font-head);font-size:1.85rem;font-weight:800;font-style:italic;margin-bottom:5px">📚 Phrase Library</div>
+    <div style="color:var(--mid);margin-bottom:24px;font-size:.9rem">Useful phrases to boost your speaking confidence</div>
+    <div class="lesson-tabs">
+      <button class="lesson-tab active" data-lesson="general" onclick="selLesson(this)">💬 General</button>
+      <button class="lesson-tab" data-lesson="ielts" onclick="selLesson(this)">📝 IELTS</button>
+      <button class="lesson-tab" data-lesson="presentation" onclick="selLesson(this)">📊 Presentation</button>
+      <button class="lesson-tab" data-lesson="pronunciation" onclick="selLesson(this)">🗣️ Pronunciation</button>
+    </div>
+    <div id="lesson-content"></div>
+  </div>
+  <footer>© 2025 <strong>TutoryEnglish</strong> &nbsp;·&nbsp;
+    <a href="https://instagram.com/shersharesielts" target="_blank">@shersharesielts</a> &nbsp;&amp;&nbsp;
+    <a href="https://instagram.com/shersharesenglish" target="_blank">@shersharesenglish</a>
+  </footer>
+</div>
+
+<script>
+
+// ══════════════════════════════════════════
+// DATA — Complete IELTS Sets (from Speaking Part Set PDF)
+// ══════════════════════════════════════════
+const SETS = [
+  { num:1,
+    p1:[ {topic:'Weather',qs:['What kind of weather do you like most?','Does weather affect your mood?','What is the weather usually like in your city?','Do you prefer hot weather or cold weather?']},
+         {topic:'Bags',qs:['Do you usually carry a bag?','What do you keep in your bag?','Have your preferences for bags changed over time?','Do you prefer practical bags or fashionable bags?']} ],
+    p2:'Describe a place you go to relax.\n\nYou should say:\n• where this place is\n• how often you go there\n• what you usually do there\n• and explain why it helps you relax.',
+    p3:{topic:'Relaxation & Mental Health',qs:['Why do people need time to relax?','Do people relax differently today compared to the past?','What activities help reduce stress?','Is modern life becoming too stressful?','Should schools teach stress management?','Why do some people find it difficult to relax?']} },
+
+  { num:2,
+    p1:[ {topic:'Music',qs:['What kind of music do you enjoy?','How often do you listen to music?','Do you prefer listening to music alone or with friends?','Has your taste in music changed over time?']},
+         {topic:'Shopping',qs:['Do you enjoy shopping?','Do you prefer online or offline shopping?','What do you usually buy online?','Do you think shopping is a good way to relax?']} ],
+    p2:'Describe a person who gives you good advice.\n\nYou should say:\n• who this person is\n• how you know them\n• what kind of advice they usually give\n• and explain why you value their advice.',
+    p3:{topic:'Advice & Life Experience',qs:['Why do people ask others for advice?','Who gives better advice, older or younger people?','Why do some people ignore advice?','Is advice from the internet reliable?','Should parents guide children\'s decisions?','Why do experienced people often give better advice?']} },
+
+  { num:3,
+    p1:[ {topic:'Tea & Coffee',qs:['Do you prefer tea or coffee?','How often do you drink it?','When do you usually drink it?','Do people in your country prefer tea or coffee?']},
+         {topic:'Weekends',qs:['What do you usually do on weekends?','Do you prefer staying home or going out?','What did you do last weekend?','Are weekends important for you?']} ],
+    p2:'Describe a skill you want to learn.\n\nYou should say:\n• what the skill is\n• why you want to learn it\n• how you plan to learn it\n• and explain how it could help you in the future.',
+    p3:{topic:'Skills & Learning',qs:['Why do people want to learn new skills?','Is it harder to learn new things as adults?','What skills are important nowadays?','Should schools focus more on practical skills?','Can online platforms replace teachers?','Why do some people stop learning after graduation?']} },
+
+  { num:4,
+    p1:[ {topic:'Clothes',qs:['What kind of clothes do you usually wear?','Do you prefer comfort or fashion?','Has your style changed over time?','Do clothes affect people\'s first impressions?']},
+         {topic:'Reading',qs:['Do you enjoy reading?','What kind of books do you like?','Do you prefer printed books or e-books?','Did you read more when you were younger?']} ],
+    p2:'Describe a memorable holiday celebration.\n\nYou should say:\n• what holiday it was\n• where you celebrated it\n• who you celebrated with\n• and explain why it was memorable.',
+    p3:{topic:'Festivals & Celebrations',qs:['Why are festivals important?','How have celebrations changed nowadays?','Do young people still value traditional festivals?','Should governments spend money on festivals?','How do festivals help tourism?','Why do people enjoy celebrating together?']} },
+
+  { num:5,
+    p1:[ {topic:'Sports',qs:['Do you enjoy sports?','What sport do you like the most?','Did you play sports as a child?','Do you prefer watching or playing sports?']},
+         {topic:'Mobile Phones',qs:['How often do you use your phone?','What do you usually use your phone for?','Do you think people use phones too much nowadays?','Have smartphones changed people\'s lifestyles?']} ],
+    p2:'Describe a time you helped someone.\n\nYou should say:\n• who you helped\n• what problem they had\n• how you helped them\n• and explain how you felt afterward.',
+    p3:{topic:'Helping Others & Society',qs:['Why is helping others important?','Do people help each other less nowadays?','Should children learn volunteering at school?','Why do some people refuse to help others?','Can helping others improve mental health?','How can governments encourage people to help society?']} },
+
+  { num:6,
+    p1:[ {topic:'Hometown',qs:['Where is your hometown?','What do you like most about your hometown?','Has your hometown changed much in recent years?','Would you like to live there in the future?']},
+         {topic:'Photography',qs:['Do you enjoy taking photos?','What do you usually take pictures of?','Do you prefer phone cameras or professional cameras?','Do you like looking at old photos?']} ],
+    p2:'Describe a city you would like to visit.\n\nYou should say:\n• what city it is\n• where it is located\n• what you know about it\n• and explain why you want to visit it.',
+    p3:{topic:'Cities & Tourism',qs:['Why do people enjoy visiting big cities?','What problems do crowded cities face?','Are cities becoming too expensive to live in?','Why do young people move to cities?','How can cities attract more tourists?','Do cities change local culture?']} },
+
+  { num:7,
+    p1:[ {topic:'Cooking',qs:['Do you enjoy cooking?','How often do you cook?','What dish can you cook best?','Did you learn cooking from someone?']},
+         {topic:'Dreams',qs:['Do you usually remember your dreams?','Have you ever had a strange dream?','Do dreams affect your mood?','Do you think dreams have meanings?']} ],
+    p2:'Describe a meal you really enjoyed.\n\nYou should say:\n• what the meal was\n• where you ate it\n• who you ate it with\n• and explain why you enjoyed it so much.',
+    p3:{topic:'Food & Eating Habits',qs:['Why do people enjoy eating together?','Have eating habits changed in recent years?','Why is fast food popular?','Should schools teach healthy eating habits?','Is cooking an important life skill?','Why do some people prefer eating out?']} },
+
+  { num:8,
+    p1:[ {topic:'Parks',qs:['Do you often visit parks?','What do people usually do in parks?','Did you go to parks often as a child?','Are there enough parks in your area?']},
+         {topic:'Movies',qs:['What kinds of movies do you enjoy?','How often do you watch movies?','Do you prefer watching movies at home or in cinemas?','What was the last movie you watched?']} ],
+    p2:'Describe a place with beautiful nature.\n\nYou should say:\n• where this place is\n• what it looks like\n• what people can do there\n• and explain why you think it is beautiful.',
+    p3:{topic:'Nature & Environment',qs:['Why do people enjoy spending time in nature?','Should governments protect natural places?','How does pollution affect nature?','Why are green spaces important in cities?','Is environmental awareness improving nowadays?','Should tourism in natural areas be limited?']} },
+
+  { num:9,
+    p1:[ {topic:'Art',qs:['Do you enjoy art?','What kind of art do you like?','Did you enjoy art classes at school?','Do you visit museums or galleries?']},
+         {topic:'Sleep',qs:['How many hours do you usually sleep?','Do you think you get enough sleep?','What helps you sleep well?','Have your sleeping habits changed recently?']} ],
+    p2:'Describe a piece of technology you use often.\n\nYou should say:\n• what it is\n• how long you have used it\n• what you use it for\n• and explain why it is important to you.',
+    p3:{topic:'Technology & Modern Life',qs:['How has technology changed daily life?','Do people depend too much on technology?','Should children spend less time on devices?','What are the disadvantages of technology?','Will technology improve future lifestyles?','How has technology changed communication?']} },
+
+  { num:10,
+    p1:[ {topic:'Music',qs:['What kind of music do you enjoy?','How often do you listen to music?','Do you enjoy live music?','Has your taste in music changed?']},
+         {topic:'Public Transport',qs:['Do you often use public transport?','What type of public transport is common in your city?','Is public transportation convenient in your area?','How can public transport be improved?']} ],
+    p2:'Describe a trip that did not go as planned.\n\nYou should say:\n• where you were going\n• what problems happened\n• how you dealt with them\n• and explain how you felt afterward.',
+    p3:{topic:'Travel Problems & Experiences',qs:['What problems do tourists often face?','Why do some people enjoy adventurous trips?','Is traveling more stressful nowadays?','How can tourists prepare for problems?','Should governments improve tourist facilities?','Why do some trips become memorable?']} },
+
+  { num:11,
+    p1:[ {topic:'Animals',qs:['Do you like animals?','What is your favourite animal?','Did you have a pet as a child?','Should animals be protected?']},
+         {topic:'Daily Routine',qs:['What is your daily routine like?','What part of your day do you enjoy most?','Has your routine changed recently?','Do you prefer busy days or relaxed days?']} ],
+    p2:'Describe a hobby you enjoy.\n\nYou should say:\n• what the hobby is\n• when you started it\n• how often you do it\n• and explain why you enjoy it.',
+    p3:{topic:'Hobbies & Free Time',qs:['Why do people need hobbies?','Are hobbies different for young and old people?','Can hobbies reduce stress?','Why do some adults stop having hobbies?','Should children be encouraged to have hobbies?','Can hobbies become careers?']} },
+
+  { num:12,
+    p1:[ {topic:'Shoes',qs:['How many pairs of shoes do you own?','What kind of shoes do you wear most often?','Do you prefer comfort or style?','Did you like buying shoes as a child?']},
+         {topic:'Writing',qs:['Do you enjoy writing?','What kinds of things do you usually write?','Do you prefer typing or handwriting?','Is writing important in your work or studies?']} ],
+    p2:'Describe a teacher who influenced you.\n\nYou should say:\n• who the teacher is\n• what subject they taught\n• what made them memorable\n• and explain how they influenced you.',
+    p3:{topic:'Education & Teachers',qs:['What qualities make a good teacher?','How has education changed over time?','Should teachers be strict?','Is online learning as effective as classroom learning?','Why are some teachers more memorable than others?','Should schools teach practical skills?']} },
+
+  { num:13,
+    p1:[ {topic:'Tea & Coffee',qs:['Do you prefer tea or coffee?','How often do you drink it?','When do you usually drink it?','Do people in your country drink tea or coffee more?']},
+         {topic:'Friends',qs:['Do you have many friends?','How often do you meet your friends?','What do you usually do together?','Do friendships change as people get older?']} ],
+    p2:'Describe a memorable conversation you had.\n\nYou should say:\n• who you talked with\n• what you talked about\n• where the conversation happened\n• and explain why you remember it clearly.',
+    p3:{topic:'Communication & Relationships',qs:['Why are communication skills important?','Has technology improved communication?','Why do misunderstandings happen?','Is face-to-face communication still important?','Do people communicate less deeply nowadays?','How can good communication improve relationships?']} },
+
+  { num:14,
+    p1:[ {topic:'Plants',qs:['Do you like plants?','Do you keep plants at home?','Why do some people enjoy gardening?','Are plants important in cities?']},
+         {topic:'Fashion',qs:['Are you interested in fashion?','Do you follow fashion trends?','Has your fashion style changed?','Why do people care about fashion?']} ],
+    p2:'Describe a favourite item of clothing.\n\nYou should say:\n• what it is\n• when you got it\n• how often you wear it\n• and explain why it is your favourite.',
+    p3:{topic:'Fashion & Appearance',qs:['Why is fashion important to some people?','Do clothes affect confidence?','Are fashion trends changing faster nowadays?','Why do young people care more about fashion?','Is expensive clothing worth buying?','How does social media affect fashion?']} },
+
+  { num:15,
+    p1:[ {topic:'Restaurants',qs:['How often do you eat at restaurants?','What type of restaurants do you like?','Do you prefer eating alone or with others?','Are restaurants expensive in your area?']},
+         {topic:'Weekends',qs:['What do you usually do on weekends?','Do you prefer relaxing or being active?','What did you do last weekend?','Are weekends important for work-life balance?']} ],
+    p2:'Describe someone who helped you solve a problem.\n\nYou should say:\n• who this person is\n• what problem you had\n• how they helped you\n• and explain why their help was important.',
+    p3:{topic:'Problem Solving & Support',qs:['Why is it important to help others?','Who usually gives better advice — family or friends?','Why do some people refuse help?','Should schools teach teamwork?','How can communities support each other?','Does helping others improve happiness?']} },
+
+  { num:16,
+    p1:[ {topic:'Festivals',qs:['What festivals are popular in your country?','Do you enjoy celebrating festivals?','Did you enjoy festivals more as a child?','What do people usually do during festivals?']},
+         {topic:'Mobile Phones',qs:['How often do you use your phone?','What do you mainly use it for?','Do you think people rely too much on phones?','Have smartphones changed social interaction?']} ],
+    p2:'Describe a festival celebrated in your country.\n\nYou should say:\n• what the festival is\n• when it is celebrated\n• what people usually do\n• and explain why it is important.',
+    p3:{topic:'Traditions & Celebrations',qs:['Why are festivals important in society?','Have celebrations changed over time?','Do young people value traditions less nowadays?','How do festivals help local businesses?','Should traditional festivals be preserved?','Can international festivals influence local culture?']} },
+
+  { num:17,
+    p1:[ {topic:'Swimming',qs:['Can you swim?','Do you enjoy swimming?','How often do you go swimming?','Did you learn swimming as a child?']},
+         {topic:'Movies',qs:['What kinds of movies do you like?','How often do you watch movies?','Who do you usually watch movies with?','What was the last movie you watched?']} ],
+    p2:'Describe a sport you enjoy watching or playing.\n\nYou should say:\n• what the sport is\n• how often you play or watch it\n• who you usually do it with\n• and explain why you enjoy it.',
+    p3:{topic:'Sports & Competition',qs:['Why are sports important for children?','Why do some people enjoy extreme sports?','Should schools spend more money on sports facilities?','Why are athletes paid high salaries?','Can sports unite people?','Is watching sports as beneficial as playing sports?']} },
+
+  { num:18,
+    p1:[ {topic:'Maps',qs:['Do you use maps often?','Do you prefer digital maps or paper maps?','Were you good at reading maps as a child?','What do people usually use maps for?']},
+         {topic:'Perfume',qs:['Do you use perfume?','What kind of scents do you like?','How often do you wear perfume?','Is perfume popular in your country?']} ],
+    p2:'Describe a foreign country you are interested in.\n\nYou should say:\n• what country it is\n• what you know about it\n• what you would like to do there\n• and explain why you are interested in it.',
+    p3:{topic:'Countries & Cultural Differences',qs:['Why are people interested in foreign countries?','How can travelling abroad change people?','Is cultural exchange important?','Why do some people prefer living abroad?','How has globalisation affected cultures?','Should people learn foreign languages before travelling?']} },
+
+  { num:19,
+    p1:[ {topic:'Museums',qs:['Do you enjoy visiting museums?','What kind of museums do you like?','Did you visit museums as a child?','Are museums popular in your country?']},
+         {topic:'Exercise',qs:['Do you exercise regularly?','What kind of exercise do you do?','Do you prefer exercising alone or with others?','Why is exercise important?']} ],
+    p2:'Describe a healthy habit you have.\n\nYou should say:\n• what the habit is\n• when you started it\n• how often you do it\n• and explain why it is important to you.',
+    p3:{topic:'Health & Lifestyle',qs:['Why are people more health-conscious nowadays?','What causes unhealthy lifestyles?','Should governments promote exercise more actively?','Is mental health discussed enough in society?','How can schools encourage healthy habits?','Is modern life becoming healthier or less healthy?']} },
+];
+
+// General & Presentation banks
+const QB_GENERAL = [
+  'Talk about a person who has had a big impact on your life. Who are they and what did they do?',
+  'Describe your ideal weekend. What would you do and why?',
+  'Do you think people spend too much time on their phones? Give your opinion with reasons.',
+  'Talk about a skill you have always wanted to learn. Why does it interest you?',
+  'Describe a place that holds a special memory for you.',
+  'Is technology making us more or less connected as humans? Discuss.',
+  'Talk about a challenge you faced recently. How did you deal with it?',
+  'What does success mean to you? Has your definition changed over time?',
+  'Talk about a book, film or show that changed the way you think.',
+  'If you could live anywhere in the world, where and why?',
+  'Do you think social media does more good or more harm?',
+  'What is the most valuable lesson you have learned from a mistake?',
+  'Describe a time when you stepped outside your comfort zone.',
+  'How do you think the world will be different in 20 years?',
+  'Should the working week be reduced to four days? Give your opinion.',
+  'What do you think makes a great leader? Can leadership be taught?',
+  'If you could give your younger self one piece of advice, what would it be?',
+  'Talk about a goal you are working towards right now.',
+  'Describe the most interesting meal you have ever had.',
+  'What does a healthy work-life balance look like to you personally?',
+];
+
+const QB_PRESENTATION = [
+  {q:"Present your startup idea to a group of investors.\n\n📌 Cover: the problem you solve, your solution, your target market, and why your team can execute it.",ctx:'💼 Investor Pitch'},
+  {q:"Give a 2-minute professional introduction of yourself in a new workplace setting.\n\n📌 Cover: your background, key skills, past experience, and what you hope to achieve.",ctx:'🤝 Professional Intro'},
+  {q:"Explain to your team how a new workflow process will improve productivity.\n\n📌 Cover: the current problem, the new process steps, and how to address concerns.",ctx:'🔄 Process Explanation'},
+  {q:"Present your quarterly performance results to your manager.\n\n📌 Cover: key wins, metrics, areas for improvement, and your plan for next quarter.",ctx:'📈 Quarterly Review'},
+  {q:"Pitch a new product feature to company stakeholders.\n\n📌 Cover: the user problem it solves, how it works, and the expected business impact.",ctx:'🚀 Product Pitch'},
+  {q:"Describe a successful project you led.\n\n📌 Cover: the objectives, your role, challenges faced, and outcomes achieved.",ctx:'🏆 Project Showcase'},
+  {q:"Give a presentation on a market trend affecting your industry.\n\n📌 Cover: what the trend is, why it matters, and how companies should respond.",ctx:'📊 Market Analysis'},
+  {q:"Pitch yourself for a promotion or a new role.\n\n📌 Cover: your key contributions, growth, achievements, and why you are ready for the next level.",ctx:'⬆️ Career Pitch'},
+  {q:"Close a business presentation with a strong call to action.\n\n📌 Summarise your key points, state what the audience should do next, and end memorably.",ctx:'🎯 Closing Statement'},
+];
+
+// Lessons
+const LESSONS = {
+  general:[
+    {section:'Giving Your Opinion',phrases:[{p:'In my opinion, …',u:'Start your view clearly'},{p:'From my perspective, …',u:'Personal stance'},{p:'I strongly believe that …',u:'Confident opinion'},{p:'It seems to me that …',u:'Observation-based'},{p:'I tend to think that …',u:'Softer view'}]},
+    {section:'Adding & Contrasting',phrases:[{p:'Furthermore, …',u:'Add a stronger point'},{p:'In addition to this, …',u:'Build on your point'},{p:'However, …',u:'Introduce a contrast'},{p:'On the other hand, …',u:'Balance both sides'},{p:'Despite this, …',u:'Acknowledge but push back'}]},
+    {section:'Giving Examples',phrases:[{p:'For example, …',u:'Classic opener'},{p:'For instance, …',u:'More formal'},{p:'To illustrate this, …',u:'Explain with a scenario'},{p:'A good example of this is …',u:'Introduce evidence'}]},
+    {section:'Concluding',phrases:[{p:'To sum up, …',u:'Informal summary'},{p:'In conclusion, …',u:'Formal close'},{p:'All things considered, …',u:'Balanced wrap-up'},{p:'Ultimately, …',u:'Final strong point'}]},
+    {section:'Buying Time',phrases:[{p:'That\'s an interesting question …',u:'Buy a second to think'},{p:'Let me think about that …',u:'Natural pause'},{p:'Well, I\'d say …',u:'Casual opener'},{p:'It\'s hard to say exactly, but …',u:'Acknowledge complexity'}]},
+  ],
+  ielts:[
+    {section:'Part 1 — Personal Questions',phrases:[{p:'I\'m really into … at the moment.',u:'Talk about interests'},{p:'I tend to … most of the time.',u:'Describe habits'},{p:'Growing up, I always …',u:'Childhood reference'},{p:'I\'ve been … for about … years now.',u:'Duration'},{p:'Honestly, I\'m not a huge fan of …, but I do enjoy …',u:'Balanced answer'},{p:'It really depends — sometimes I … and other times I …',u:'Show range'}]},
+    {section:'Part 2 — Cue Card Openers',phrases:[{p:'I\'d like to talk about …',u:'Clear introduction'},{p:'The person/place/time that comes to mind is …',u:'Strong opening'},{p:'This happened when I was …, and it really stuck with me.',u:'Narrative hook'},{p:'What made this particularly special was …',u:'Highlight key point'},{p:'To give you a bit of background, …',u:'Set the scene'}]},
+    {section:'Part 3 — Discussion',phrases:[{p:'That\'s a thought-provoking question. I think …',u:'Acknowledge complexity'},{p:'There are several factors to consider. Firstly, …',u:'Structure your answer'},{p:'I think it really depends on … For example, …',u:'Nuanced view'},{p:'While some people argue …, I personally believe …',u:'Two-sided then your view'},{p:'In an ideal world, … However, in reality …',u:'Contrast ideal vs reality'}]},
+    {section:'Linking',phrases:[{p:'Moving on to …',u:'Transition'},{p:'Returning to the question, …',u:'Refocus'},{p:'To develop this further, …',u:'Expand an idea'},{p:'This links back to …',u:'Connect to earlier point'}]},
+  ],
+  presentation:[
+    {section:'Opening Strong',phrases:[{p:'Good morning/afternoon, everyone. Today I\'d like to present …',u:'Standard open'},{p:'Thank you for having me. My talk today focuses on …',u:'Grateful and clear'},{p:'Let me start with a quick question: …',u:'Engage audience'},{p:'By the end of this presentation, you\'ll understand …',u:'Set expectations'},{p:'My talk is divided into three parts: …',u:'Signal structure'}]},
+    {section:'Signposting',phrases:[{p:'Moving on to my next point, …',u:'Smooth transition'},{p:'Let\'s now take a look at …',u:'New section'},{p:'I\'d like to draw your attention to …',u:'Highlight'},{p:'Before I move on, let me quickly recap …',u:'Mini-summary'}]},
+    {section:'Closing',phrases:[{p:'To wrap up, the key takeaways are …',u:'Summarise'},{p:'In summary, what I\'ve shown today is …',u:'Final recap'},{p:'So, what I\'d like you to do next is …',u:'Call to action'},{p:'Thank you for your time and attention.',u:'Professional close'},{p:'I\'m happy to take any questions now.',u:'Open Q&A'}]},
+  ],
+  pronunciation:[
+    {section:'Word Stress Rules',phrases:[
+      {p:'PHOtograph → phoTOgraphy → photoGRAPHic',u:'Stress shifts with suffix — practise each form'},
+      {p:'REcord (noun) vs reCORD (verb)',u:'Many 2-syllable words change stress by part of speech'},
+      {p:'comFORTable → COMfortable',u:'Reduction is natural — don\'t force every syllable'},
+      {p:'imPORtant → imPORtnt',u:'Unstressed vowels reduce to schwa /ə/ in fluent speech'},
+      {p:'univERsity → uniVERsity',u:'Stress the penultimate syllable in many -ity words'},
+    ]},
+    {section:'Connected Speech',phrases:[
+      {p:'What are you → Whadda you / Whatcha',u:'Linking & reduction in fast natural speech'},
+      {p:'going to → gonna',u:'Common in informal speech — fine in IELTS Part 1'},
+      {p:'want to → wanna',u:'Reduction — sounds more natural than stiff full forms'},
+      {p:'I am → I\'m / he is → he\'s',u:'Always contract in speaking — full forms sound unnatural'},
+      {p:'cup of tea → cuppa tea',u:'Linking: final consonant attaches to next vowel sound'},
+      {p:'an apple → a_napple',u:'Linking: /n/ joins to next word starting with a vowel'},
+    ]},
+    {section:'Tricky Sounds',phrases:[
+      {p:'/θ/ — think, three, health',u:'Tongue lightly touches back of upper teeth — not /t/ or /f/'},
+      {p:'/ð/ — this, that, mother',u:'Same position as /θ/ but voiced — vibrate your throat'},
+      {p:'/v/ vs /w/ — very vs worry',u:'/v/: top teeth on lower lip. /w/: rounded lips, no teeth'},
+      {p:'/r/ — right, wrong, around',u:'Tongue tip curls back slightly, does not touch the roof'},
+      {p:'/æ/ — cat, hand, map',u:'Mouth wide open, jaw drops — longer than short /e/'},
+      {p:'/ɪ/ vs /iː/ — sit vs seat',u:'Short tense vowel vs long vowel — feel the difference'},
+    ]},
+    {section:'Intonation Patterns',phrases:[
+      {p:'Rising intonation → Yes/No questions',u:'Your voice goes UP at the end: "Are you ready?"'},
+      {p:'Falling intonation ↘ Wh- questions',u:'Voice goes DOWN: "Where did you go?"'},
+      {p:'Rise-fall ↗↘ Lists & choices',u:'"I like coffee ↗, tea ↗, and juice ↘"'},
+      {p:'Fall-rise ↘↗ Uncertainty or politeness',u:'"I\'m not sure ↘↗…" — signals more to come'},
+      {p:'Sentence stress on KEY word',u:'"I LOVE coffee" vs "I love COFFEE" — stress changes meaning'},
+    ]},
+    {section:'Pronunciation Practice Tips',phrases:[
+      {p:'Shadow a native speaker for 5 minutes daily',u:'Mimic rhythm, stress and linking — not just sounds'},
+      {p:'Record yourself and compare',u:'Most people are surprised by how they actually sound'},
+      {p:'Practise minimal pairs: ship/sheep, live/leave',u:'Train your ear to hear and produce the difference'},
+      {p:'Read aloud from a script or article daily',u:'Builds fluency, linking and natural rhythm'},
+      {p:'Focus on stress and rhythm, not perfection',u:'English is stress-timed — get the beats right first'},
+    ]},
+  ],
+};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const S = {
+  mode:'solo', cat:'general', ieltspart:'all',
+  phase:'idle',
+  prepLeft:60, talkLeft:120, talkSecsUsed:0,
+  prepTimer:null, talkTimer:null, elapsedTimer:null,
+  // All-Parts
+  currentSet:null,
+  apPhase:'p1t1',   // p1t1 | p1t2 | p2 | p3
+  apQIdx:0,
+  // Individual Part 1/3
+  currentTopic:null, currentQIdx:0,
+  // Part 2 / General / Presentation
+  currentQ:null,
+  // For result
+  lastQ:'',
+};
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nav-'+id);
+  if(nb) nb.classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){ stopAll(); showScreen('home'); }
+function goSetup(){ stopAll(); showScreen('setup'); document.getElementById('nav-practice').classList.add('active'); }
+function goLessons(){ showScreen('lessons'); renderLesson('general'); }
+function exitPractice(){ stopAll(); goSetup(); }
+
+// ══════════════════════════════════════════
+// SETUP
+// ══════════════════════════════════════════
+function selCat(el){
+  document.querySelectorAll('[data-cat]').forEach(c=>c.classList.remove('active')); el.classList.add('active'); S.cat=el.dataset.cat;
+  document.getElementById('ielts-panel').style.display=S.cat==='ielts'?'block':'none';
+}
+const PART_DESC={all:'All Parts — complete mock: Part 1 topics → Part 2 cue card (timed) → Part 3 discussion.',
+  '1':'Part 1 · Random topic, questions one by one. Skip or move to next anytime.',
+  '2':'Part 2 · Random cue card. 1 min prep + 2 min speaking — just like the real exam.',
+  '3':'Part 3 · Random discussion topic, questions one by one.'};
+function selPart(el){
+  document.querySelectorAll('[data-part]').forEach(c=>c.classList.remove('active')); el.classList.add('active'); S.ieltspart=el.dataset.part;
+  document.getElementById('ielts-desc').textContent=PART_DESC[S.ieltspart]||'';
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+const CIRC=2*Math.PI*70; // r=70
+function updRing(left,total,phase){
+  const bar=document.getElementById('t-bar');
+  bar.style.strokeDashoffset=CIRC*(1-left/total);
+  bar.className='t-bar '+(phase==='prep'?'prep':phase==='done'?'done':'');
+}
+function fmt(s){ return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60; }
+function hide(...ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; }); }
+function show(id,d='block'){ const el=document.getElementById(id); if(el) el.style.display=d; }
+function txt(id,t){ const el=document.getElementById(id); if(el) el.textContent=t; }
+function stopAll(){
+  clearInterval(S.prepTimer); clearInterval(S.talkTimer); clearInterval(S.elapsedTimer);
+  S.phase='idle';
+}
+function resetUI(){
+  hide('timer-wrap','elapsed-wrap','trans-card','topic-hdr','stepper');
+  show('q-card'); show('t-bar');
+  txt('btn-start','▶ Start'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+  txt('phase-lbl','Get Ready');
+  txt('elapsed-num','0:00');
+  updRing(120,120,'talk');
+  document.getElementById('elapsed-wrap').style.display='none';
+}
+
+// ══════════════════════════════════════════
+// START PRACTICE (router)
+// ══════════════════════════════════════════
+function startPractice(){
+  stopAll();
+  resetUI();
+  S.talkSecsUsed=0;
+  showScreen('practice');
+  document.getElementById('nav-practice').classList.add('active');
+
+  if(S.cat==='general') launchGeneral();
+  else if(S.cat==='presentation') launchPresentation();
+  else if(S.cat==='ielts'){
+    if(S.ieltspart==='all') launchAllParts();
+    else if(S.ieltspart==='1') launchPart1();
+    else if(S.ieltspart==='2') launchPart2();
+    else if(S.ieltspart==='3') launchPart3();
+  }
+}
+
+// ── badge helper ──
+function setBadge(label,cls){ const b=document.getElementById('prac-badge'); b.textContent=label; b.className='cat-badge '+cls; }
+
+// ══════════════════════════════════════════
+// GENERAL / PRESENTATION
+// ══════════════════════════════════════════
+function launchGeneral(){
+  setBadge('💬 General','rust');
+  S.currentQ = rand(QB_GENERAL);
+  S.lastQ = S.currentQ;
+  resetUI();
+  document.getElementById('q-card').className='q-card';
+  txt('q-tag','YOUR TOPIC IS:');
+  txt('q-text',S.currentQ);
+  txt('btn-start','▶ Start');
+}
+function launchPresentation(){
+  setBadge('📊 Presentation','green');
+  S.currentQ = rand(QB_PRESENTATION);
+  S.lastQ = S.currentQ.q;
+  resetUI();
+  document.getElementById('q-card').className='q-card green';
+  txt('q-tag',S.currentQ.ctx||'YOUR TASK:');
+  txt('q-text',S.currentQ.q);
+  txt('btn-start','▶ Start');
+}
+
+// ══════════════════════════════════════════
+// ALL PARTS
+// ══════════════════════════════════════════
+function launchAllParts(){
+  setBadge('📝 IELTS · All Parts','blue');
+  S.currentSet = rand(SETS);
+  S.apPhase='p1t1'; S.apQIdx=0;
+  show('stepper','flex');
+  stepperUpdate('p1t1');
+  startAP_P1T1();
+}
+function stepperUpdate(phase){
+  ['step-p1','step-p2','step-p3'].forEach(id=>{ const el=document.getElementById(id); el.className='step'; });
+  if(phase==='p1t1'||phase==='p1t2') document.getElementById('step-p1').className='step active';
+  else if(phase==='p2') document.getElementById('step-p2').className='step active';
+  else if(phase==='p3') document.getElementById('step-p3').className='step active';
+  if(phase==='p2'||phase==='p3') document.getElementById('step-p1').className='step done';
+  if(phase==='p3') document.getElementById('step-p2').className='step done';
+}
+function startAP_P1T1(){
+  S.apPhase='p1t1'; S.apQIdx=0; S.talkSecsUsed=0;
+  const t=S.currentSet.p1[0];
+  show('topic-hdr','flex'); txt('topic-lbl','Part 1 — Topic 1'); txt('topic-name',t.topic);
+  txt('topic-prog','Q 1 / '+t.qs.length);
+  hide('trans-card','timer-wrap','elapsed-wrap');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','YOUR QUESTION IS:'); txt('q-text',t.qs[0]);
+  txt('phase-lbl','Part 1 · '+t.topic);
+  txt('btn-start','▶ Start Speaking'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+  S.lastQ=t.qs[0];
+}
+function startAP_P1T2(){
+  S.apPhase='p1t2'; S.apQIdx=0; S.talkSecsUsed=0;
+  const t=S.currentSet.p1[1];
+  show('topic-hdr','flex'); txt('topic-lbl','Part 1 — Topic 2'); txt('topic-name',t.topic);
+  txt('topic-prog','Q 1 / '+t.qs.length);
+  hide('trans-card','elapsed-wrap','timer-wrap');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','YOUR QUESTION IS:'); txt('q-text',t.qs[0]);
+  txt('phase-lbl','Part 1 · '+t.topic);
+  txt('btn-start','▶ Start Speaking'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+  S.lastQ=t.qs[0];
+}
+function startAP_P2(){
+  stepperUpdate('p2'); S.apPhase='p2';
+  hide('topic-hdr','trans-card','elapsed-wrap');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','CUE CARD — 2 MINUTES TO SPEAK:'); txt('q-text',S.currentSet.p2);
+  txt('phase-lbl','Part 2 · Cue Card'); S.lastQ=S.currentSet.p2;
+  txt('btn-start','▶ Start Preparation (1 min)'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+}
+function startAP_P3(){
+  stepperUpdate('p3'); S.apPhase='p3'; S.apQIdx=0; S.talkSecsUsed=0;
+  const t=S.currentSet.p3;
+  show('topic-hdr','flex'); txt('topic-lbl','Part 3 — Discussion'); txt('topic-name',t.topic);
+  txt('topic-prog','Q 1 / '+t.qs.length);
+  hide('trans-card','timer-wrap','elapsed-wrap');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','YOUR QUESTION IS:'); txt('q-text',t.qs[0]);
+  txt('phase-lbl','Part 3 · '+t.topic); S.lastQ=t.qs[0];
+  txt('btn-start','▶ Start Speaking'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+}
+function showTrans(title,msg,nextFn){
+  hide('q-card','topic-hdr','timer-wrap','elapsed-wrap','btn-start','btn-skip-prep','btn-stop','btn-next');
+  show('trans-card'); txt('trans-title',title); txt('trans-msg',msg);
+  S._transNext=nextFn;
+}
+function transNext(){ hide('trans-card'); if(S._transNext) S._transNext(); }
+
+// ══════════════════════════════════════════
+// INDIVIDUAL PART 1
+// ══════════════════════════════════════════
+function launchPart1(){
+  setBadge('📝 IELTS Part 1','blue');
+  // pick random topic across all sets' p1
+  const allTopics=[]; SETS.forEach(s=>s.p1.forEach(t=>allTopics.push(t)));
+  S.currentTopic=rand(allTopics); S.currentQIdx=0; S.talkSecsUsed=0;
+  hide('stepper','trans-card');
+  showP1Q();
+}
+function showP1Q(){
+  const t=S.currentTopic; const q=t.qs[S.currentQIdx];
+  S.lastQ=q;
+  show('topic-hdr','flex'); txt('topic-lbl','Topic'); txt('topic-name',t.topic);
+  txt('topic-prog','Q '+(S.currentQIdx+1)+' / '+t.qs.length);
+  hide('timer-wrap','elapsed-wrap','trans-card');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','YOUR QUESTION IS:'); txt('q-text',q);
+  txt('phase-lbl','Part 1 · '+t.topic);
+  txt('btn-start','▶ Start Speaking'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+  clearInterval(S.elapsedTimer);
+  txt('elapsed-num','0:00');
+}
+
+// ══════════════════════════════════════════
+// INDIVIDUAL PART 2
+// ══════════════════════════════════════════
+function launchPart2(){
+  setBadge('📋 IELTS Part 2','blue');
+  S.currentQ=rand(SETS).p2; S.lastQ=S.currentQ;
+  hide('stepper','topic-hdr','trans-card','elapsed-wrap');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','CUE CARD — 2 MINUTES TO SPEAK:'); txt('q-text',S.currentQ);
+  txt('phase-lbl','Part 2 · Cue Card');
+  txt('btn-start','▶ Start Preparation (1 min)'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+}
+
+// ══════════════════════════════════════════
+// INDIVIDUAL PART 3
+// ══════════════════════════════════════════
+function launchPart3(){
+  setBadge('💬 IELTS Part 3','blue');
+  const allP3=[]; SETS.forEach(s=>allP3.push(s.p3));
+  S.currentTopic=rand(allP3); S.currentQIdx=0; S.talkSecsUsed=0;
+  hide('stepper','trans-card');
+  showP3Q();
+}
+function showP3Q(){
+  const t=S.currentTopic; const q=t.qs[S.currentQIdx];
+  S.lastQ=q;
+  show('topic-hdr','flex'); txt('topic-lbl','Discussion Topic'); txt('topic-name',t.topic);
+  txt('topic-prog','Q '+(S.currentQIdx+1)+' / '+t.qs.length);
+  hide('timer-wrap','elapsed-wrap','trans-card');
+  document.getElementById('q-card').className='q-card blue';
+  show('q-card'); txt('q-tag','DISCUSSION QUESTION:'); txt('q-text',q);
+  txt('phase-lbl','Part 3 · '+t.topic);
+  txt('btn-start','▶ Start Speaking'); show('btn-start');
+  hide('btn-skip-prep','btn-stop','btn-next');
+  clearInterval(S.elapsedTimer);
+  txt('elapsed-num','0:00');
+}
+
+// ══════════════════════════════════════════
+// CONTROLS — onStart / onStop / onNext
+// ══════════════════════════════════════════
+function onStart(){
+  const p=S.ieltspart, c=S.cat, ap=S.apPhase;
+  // All Parts
+  if(c==='ielts'&&p==='all'){
+    if(ap==='p2'||ap==='p2-prep') beginPrep();
+    else beginElapsed();
+    return;
+  }
+  // Individual Part 2 or Presentation (timed)
+  if((c==='ielts'&&p==='2')||c==='presentation'||(c==='general')) {
+    if(c==='ielts'&&p==='2') beginPrep();
+    else beginElapsed();
+    return;
+  }
+  // Part 1, Part 3
+  beginElapsed();
+}
+
+function beginElapsed(){
+  S.phase='talk'; S.talkSecsUsed=0;
+  clearInterval(S.elapsedTimer);
+  show('elapsed-wrap'); txt('elapsed-num','0:00');
+  hide('timer-wrap','btn-start','btn-skip-prep');
+  show('btn-stop'); txt('btn-stop','⏹ Done');
+  // Show Next button for Part 1/3 style (when there are more questions)
+  const hasNext=needsNext();
+  if(hasNext){ show('btn-next'); txt('btn-next','Next Question →'); }
+  txt('phase-lbl','🎙️ Speaking…');
+  S.elapsedTimer=setInterval(()=>{ S.talkSecsUsed++; txt('elapsed-num',fmt(S.talkSecsUsed)); },1000);
+}
+
+function needsNext(){
+  const c=S.cat,p=S.ieltspart,ap=S.apPhase;
+  if(c==='ielts'&&p==='1') return true;
+  if(c==='ielts'&&p==='3') return true;
+  if(c==='ielts'&&p==='all'&&(ap==='p1t1'||ap==='p1t2'||ap==='p3')) return true;
+  return false;
+}
+
+function beginPrep(){
+  S.phase='prep'; S.prepLeft=60;
+  show('timer-wrap'); show('btn-skip-prep');
+  hide('btn-start','btn-stop','btn-next','elapsed-wrap');
+  txt('t-num','1:00'); txt('t-phase','PREP');
+  updRing(60,60,'prep'); txt('phase-lbl','⏳ Prep Time — 1 minute');
+  clearInterval(S.prepTimer);
+  S.prepTimer=setInterval(()=>{
+    S.prepLeft--;
+    txt('t-num',fmt(S.prepLeft)); updRing(S.prepLeft,60,'prep');
+    if(S.prepLeft<=0){ clearInterval(S.prepTimer); beginTalk(); }
+  },1000);
+}
+function onSkipPrep(){ clearInterval(S.prepTimer); hide('btn-skip-prep'); beginTalk(); }
+
+function beginTalk(){
+  S.phase='talk'; S.talkLeft=120; S.talkSecsUsed=0;
+  hide('btn-skip-prep','btn-start','btn-next');
+  show('timer-wrap'); show('btn-stop'); txt('btn-stop','⏹ Stop Early');
+  txt('t-num','2:00'); txt('t-phase','TALK');
+  updRing(120,120,'talk'); txt('phase-lbl','🎙️ Speaking Time — 2 minutes');
+  clearInterval(S.talkTimer);
+  S.talkTimer=setInterval(()=>{
+    S.talkLeft--; S.talkSecsUsed++;
+    txt('t-num',fmt(S.talkLeft)); updRing(S.talkLeft,120,'talk');
+    if(S.talkLeft<=0){ clearInterval(S.talkTimer); onTalkDone(); }
+  },1000);
+}
+
+function onStop(){
+  clearInterval(S.elapsedTimer); clearInterval(S.talkTimer); clearInterval(S.prepTimer);
+  S.phase='idle';
+  hide('btn-stop');
+  // If next-able: show Next button, hide elapsed
+  if(needsNext()){
+    hide('elapsed-wrap');
+    show('btn-next'); txt('btn-next','Next Question →');
+    txt('phase-lbl','Done ✓ — tap Next or finish');
+    return;
+  }
+  onTalkDone();
+}
+
+function onTalkDone(){
+  clearInterval(S.talkTimer); clearInterval(S.elapsedTimer);
+  S.phase='done';
+  hide('btn-stop','btn-skip-prep');
+  updRing(0,120,'done'); txt('t-phase','DONE'); txt('t-num','0:00');
+
+  const c=S.cat,p=S.ieltspart,ap=S.apPhase;
+
+  // All Parts flow
+  if(c==='ielts'&&p==='all'){
+    if(ap==='p2'){
+      showTrans('Part 2 Complete ✅','Great! Now moving on to Part 3 — Discussion.',startAP_P3);
+    }
+    return;
+  }
+
+  setTimeout(()=>showResult(),700);
+}
+
+function onNext(){
+  clearInterval(S.elapsedTimer); clearInterval(S.talkTimer);
+  hide('btn-next'); S.phase='idle';
+  const c=S.cat,p=S.ieltspart,ap=S.apPhase;
+
+  if(c==='ielts'&&p==='1'){
+    S.currentQIdx++;
+    if(S.currentQIdx>=S.currentTopic.qs.length){
+      // topic done
+      showTrans('Topic Complete ✅','You\'ve finished this topic! Try another or go back.',()=>{ launchPart1(); });
+    } else showP1Q();
+    return;
+  }
+  if(c==='ielts'&&p==='3'){
+    S.currentQIdx++;
+    if(S.currentQIdx>=S.currentTopic.qs.length){
+      showTrans('Topic Complete ✅','You\'ve finished this topic! Try another or go back.',()=>{ launchPart3(); });
+    } else showP3Q();
+    return;
+  }
+  // All Parts
+  if(c==='ielts'&&p==='all'){
+    if(ap==='p1t1'){
+      S.apQIdx++;
+      const t=S.currentSet.p1[0];
+      if(S.apQIdx>=t.qs.length){
+        showTrans('Topic 1 Complete ✅','Moving to Topic 2: '+S.currentSet.p1[1].topic,startAP_P1T2);
+      } else {
+        show('q-card'); txt('q-text',t.qs[S.apQIdx]); txt('topic-prog','Q '+(S.apQIdx+1)+' / '+t.qs.length);
+        S.lastQ=t.qs[S.apQIdx];
+        hide('btn-stop','elapsed-wrap'); show('btn-start'); txt('btn-start','▶ Start Speaking');
+        txt('elapsed-num','0:00'); txt('phase-lbl','Get Ready');
+      }
+    } else if(ap==='p1t2'){
+      S.apQIdx++;
+      const t=S.currentSet.p1[1];
+      if(S.apQIdx>=t.qs.length){
+        showTrans('Part 1 Complete ✅','Moving to Part 2 — Cue Card. 1 min prep + 2 min speaking.',startAP_P2);
+        stepperUpdate('p2');
+      } else {
+        show('q-card'); txt('q-text',t.qs[S.apQIdx]); txt('topic-prog','Q '+(S.apQIdx+1)+' / '+t.qs.length);
+        S.lastQ=t.qs[S.apQIdx];
+        hide('btn-stop','elapsed-wrap'); show('btn-start'); txt('btn-start','▶ Start Speaking');
+        txt('elapsed-num','0:00'); txt('phase-lbl','Get Ready');
+      }
+    } else if(ap==='p3'){
+      S.apQIdx++;
+      const t=S.currentSet.p3;
+      if(S.apQIdx>=t.qs.length){
+        // All parts done
+        showTrans('🎉 Practice Complete!','You\'ve finished all three parts of the mock test.',()=>showResult());
+        stepperUpdate('done');
+      } else {
+        show('q-card'); txt('q-text',t.qs[S.apQIdx]); txt('topic-prog','Q '+(S.apQIdx+1)+' / '+t.qs.length);
+        S.lastQ=t.qs[S.apQIdx];
+        hide('btn-stop','elapsed-wrap'); show('btn-start'); txt('btn-start','▶ Start Speaking');
+        txt('elapsed-num','0:00'); txt('phase-lbl','Get Ready');
+      }
+    }
+  }
+}
+
+
+// ══════════════════════════════════════════
+// RESULT
+// ══════════════════════════════════════════
+const MSGS=[[90,'🌟 Outstanding! Keep up this great work.'],[60,'🎉 Well done! You spoke confidently.'],[30,'👍 Good effort — try to fill the full time.'],[0,'🌱 Great start! Consistency is the key.']];
+function showResult(){
+  showScreen('result');
+  const pct=Math.round((S.talkSecsUsed/120)*100);
+  const msg=MSGS.find(m=>pct>=m[0]);
+  txt('result-title',msg?msg[1]:'Nice work!');
+  txt('result-sub','Session complete — keep practising!');
+  txt('result-time',fmt(S.talkSecsUsed));
+  const isP2=(S.cat==='ielts'&&(S.ieltspart==='2'||(S.ieltspart==='all'&&S.apPhase==='p2')));
+  txt('result-time-lbl',isP2?'Time Spoken (Part 2)':'Time Spoken');
+  txt('result-q',S.lastQ||'—');
+
+}
+function tryAgain(){ startPractice(); }
+
+// ══════════════════════════════════════════
+// LESSONS
+// ══════════════════════════════════════════
+function selLesson(el){ document.querySelectorAll('.lesson-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); renderLesson(el.dataset.lesson); }
+function renderLesson(key){
+  const data=LESSONS[key]||[]; const c=document.getElementById('lesson-content'); c.innerHTML='';
+  data.forEach(sec=>{
+    const d=document.createElement('div'); d.className='phrase-section fade-up';
+    d.innerHTML='<h3>'+sec.section+'</h3><div class="phrase-grid">'+
+      sec.phrases.map(p=>'<div class="phrase-card"><div class="phrase">"'+p.p+'"</div><div class="usage">'+p.u+'</div></div>').join('')+'</div>';
+    c.appendChild(d);
+  });
+}
+
+</script>
+</body>
+</html>
